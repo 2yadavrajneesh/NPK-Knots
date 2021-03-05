@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'knotend',
+    'storages',
     'crispy_forms',
 ]
 
@@ -79,8 +80,12 @@ WSGI_APPLICATION = 'NPK.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'npkmaindb',  # Your AWS DB name
+        'USER': 'npkadmin',  # Your AWS Username
+        'PASSWORD': 'redhat123',  # Your AWS Password
+        'HOST': 'npkknotsmaindb.cssgwjlhiewv.ap-south-1.rds.amazonaws.com',  # Your AWS Hostname
+        'PORT': '5432',
     }
 }
 
@@ -121,17 +126,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_URL = '/static/'
 
-# Extra places for collectstatic to find static files.
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
+#
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Login Settings
 
@@ -139,3 +142,26 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_REDIRECT_URL = '/'
+
+
+# AWS Settings
+
+AWS_LOCATION = 'static'
+AWS_ACCESS_KEY_ID = 'AKIA2QMUNTD5DAQE7Y42'  # Your AWS Access Key ID
+AWS_SECRET_ACCESS_KEY = 'fDgnwRc9W71x5tYEjvv47nYBAro/BYPxNCKtlSxu'  # Your AWS Secret Access Key
+AWS_STORAGE_BUCKET_NAME = 'npkbucket'  # Your AWS Bucket name
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+DEFAULT_FILE_STORAGE = 'NPK.storage_backends.MediaStorage'
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder', 'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+AWS_DEFAULT_ACL = None
