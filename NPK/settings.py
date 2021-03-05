@@ -25,7 +25,7 @@ SECRET_KEY = '1cihn0x-+@g1lb__xma_71=xcys1-p3h=)vpwt3ur6yq6n-8^n'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['npk-knots.com', 'www.npk-knots.com']
+ALLOWED_HOSTS = ['npk-knots.com', 'www.npk-knots.com', '139.59.17.163']
 
 
 # Application definition
